@@ -22,16 +22,17 @@ def clean_and_convert(df):
 
 # Helper function to calculate metrics
 def calculate_metrics(df):
-    total_orders = len(df)
-    total_cancelled_orders = len(df[df['type'].str.contains('cancelled', case=False, na=False)])
-    total_return_orders = len(df[df['type'].str.contains('returned', case=False, na=False)])
-    amazon_sharing_fees = df['selling fees'].sum()
-    shipping_fees = df['other transaction fees'].sum()
-    fba_fees = df['fba fees'].sum()
-    gross_profit = df['total'].sum() - amazon_sharing_fees - shipping_fees - fba_fees
+    total_orders = total_return_orders = len(df[df['type'].str.contains('order', case=False, na=False)])-len(df[df['type'].str.contains('refund', case=False, na=False)])
+    total_cancelled_orders = len(df[df['type'].str.contains('refund', case=False, na=False)])
+    total_return_orders = len(df[df['type'].str.contains('refund', case=False, na=False)])
+    amazon_sharing_fees = abs(df['selling fees'].sum())
+    shipping_fees = abs(df['other transaction fees'].sum())
+    fba_fees = abs(df['fba fees'].sum())
+    total_sales = abs(df['product sales'].sum())
+    gross_profit = df['total'].sum()
     net_profit = gross_profit - df['total sales tax liable(gst before adjusting tcs)'].sum() - df['tcs-cgst'].sum() - df['tcs-sgst'].sum() - df['tcs-igst'].sum() - df['tds (section 194-o)'].sum()
     critical_orders = df[df['type'].str.contains('critical', case=False, na=False)]
-    return total_orders, total_cancelled_orders, total_return_orders, amazon_sharing_fees, shipping_fees, fba_fees, gross_profit, net_profit, critical_orders
+    return total_orders, total_cancelled_orders, total_return_orders, amazon_sharing_fees, shipping_fees, fba_fees, gross_profit, net_profit, critical_orders, total_sales
 
 # Main Streamlit app
 def main():
@@ -50,7 +51,7 @@ def main():
 
         # Calculate metrics
         metrics = calculate_metrics(df)
-        total_orders, total_cancelled_orders, total_return_orders, amazon_sharing_fees, shipping_fees, fba_fees, gross_profit, net_profit, critical_orders = metrics
+        total_orders, total_cancelled_orders, total_return_orders, amazon_sharing_fees, shipping_fees, fba_fees, gross_profit, net_profit, critical_orders, total_sales = metrics
 
         # Key Metrics Section
         st.header('Key Metrics')
@@ -64,7 +65,7 @@ def main():
         with col4:
             st.metric('Amazon Sharing Fees', f"₹{amazon_sharing_fees:,.2f}")
 
-        col5, col6, col7, col8 = st.columns(4)
+        col5, col6, col7, col8, col9 = st.columns(5)
         with col5:
             st.metric('Shipping Fees', f"₹{shipping_fees:,.2f}")
         with col6:
@@ -73,6 +74,8 @@ def main():
             st.metric('Gross Profit', f"₹{gross_profit:,.2f}")
         with col8:
             st.metric('Net Profit', f"₹{net_profit:,.2f}")
+        with col9:
+            st.metric('Total Sales', f"₹{total_sales:,.2f}")
 
         # Critical Orders Section
         st.header('Critical Orders from Reconciliation')
