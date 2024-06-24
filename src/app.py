@@ -17,10 +17,15 @@ def main():
 
         # Calculate metrics
         metrics = calculate_metrics(df)
+
+        # Extract relevant metrics for display
+        total_orders, total_cancelled_orders, total_return_orders, amazon_sharing_fees, shipping_fees, fba_fees, gross_profit, net_profit,  total_sales, mode_value, less_than_mode, greater_than_mode = metrics
+
+        # Display Metrics
         display_metrics(metrics)
-        
+
         # Display Critical Orders
-        display_critical_orders(df)
+        display_critical_orders(mode_value, less_than_mode, greater_than_mode)
 
         # Display Location Analysis
         display_location_analysis(df)
