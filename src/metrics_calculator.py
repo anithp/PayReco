@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 def calculate_metrics(df):
-    total_orders = len(df[df['type'].str.contains('order', case=False, na=False)])
+    total_orders = len(df[df['type'].str.contains('order', case=False, na=False)]) - len(df[df['type'].str.contains('refund|cancelled', case=False, na=False)])
     total_cancelled_orders = len(df[df['type'].str.contains('refund|cancelled', case=False, na=False)])
     total_return_orders = len(df[df['type'].str.contains('refund', case=False, na=False)])
     amazon_sharing_fees = abs(df['selling fees'].sum())
