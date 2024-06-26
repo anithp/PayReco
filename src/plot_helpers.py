@@ -2,7 +2,7 @@ import streamlit as st
 
 def display_metrics(metrics):
     # Extract only the first 10 metrics relevant to display_metrics
-    total_orders, total_cancelled_orders, total_return_orders, amazon_sharing_fees, shipping_fees, fba_fees, gross_profit, net_profit, _, total_sales, *_ = metrics
+    total_orders, total_cancelled_orders, total_return_orders, amazon_sharing_fees, shipping_fees, fba_fees, gross_profit, net_profit, total_sales, _, *_ = metrics
 
     st.header('Key Metrics')
     col1, col2, col3, col4 = st.columns(4)
