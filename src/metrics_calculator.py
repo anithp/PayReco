@@ -18,10 +18,13 @@ def calculate_metrics(df):
         if pd.notna(mode_value):
             less_than_mode = len(df[df['estimated_selling_commission'] < mode_value])
             greater_than_mode = len(df[df['estimated_selling_commission'] > mode_value])
+            df_greater_than_mode = df[df['estimated_selling_commission'] > mode_value]
         else:
             less_than_mode = greater_than_mode = 0
+            df_greater_than_mode = pd.DataFrame() #empty dataframe
     else:
         mode_value = np.nan
         less_than_mode = greater_than_mode = 0
+        df_greater_than_mode = pd.DataFrame() #empty dataframe
 
-    return total_orders, total_cancelled_orders, total_return_orders, amazon_sharing_fees, shipping_fees, fba_fees, gross_profit, net_profit, total_sales, mode_value, less_than_mode, greater_than_mode
+    return total_orders, total_cancelled_orders, total_return_orders, amazon_sharing_fees, shipping_fees, fba_fees, gross_profit, net_profit, total_sales, mode_value, less_than_mode, greater_than_mode, df_greater_than_mode

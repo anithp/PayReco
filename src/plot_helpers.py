@@ -27,7 +27,7 @@ def display_metrics(metrics):
     with col9:
         st.metric('Total Sales', f"₹{total_sales:,.2f}")
 
-def display_critical_orders( mode_value, less_than_mode, greater_than_mode):
+def display_critical_orders( mode_value, less_than_mode, greater_than_mode, df_greater_than_mode):
     st.header('Critical Orders from Reconciliation')
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -36,6 +36,10 @@ def display_critical_orders( mode_value, less_than_mode, greater_than_mode):
         st.metric('Critical Commission number count', greater_than_mode)
     with col3:
         st.metric('Favourable Commission number count', less_than_mode)
+
+    st.header('Orders with Estimated Selling Commission Greater than Mode')
+    st.dataframe(df_greater_than_mode)
+
     
 
 def display_location_analysis(df):
