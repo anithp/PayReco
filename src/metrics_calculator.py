@@ -31,7 +31,8 @@ def calculate_metrics(df):
         df_greater_than_mode = pd.DataFrame()  # Empty DataFrame if no valid mode
 
     # Calculate loss from returned orders
-    returned_orders = df[df['type'].str.contains('return', case=False, na=False)]['order id'].unique()
+    returned_orders = df[df['type'].str.contains('refund', case=False, na=False)]['order id'].unique()
+    print(returned_orders)
     shipping_orders = df[df['type'].str.contains('shipping service', case=False, na=False)]['order id'].unique()
     actual_orders = df[df['type'].str.contains('order', case=False, na=False)]['order id'].unique()
 
