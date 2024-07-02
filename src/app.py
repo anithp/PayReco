@@ -17,14 +17,15 @@ def main():
 
         # Calculate metrics
         metrics = calculate_metrics(df)
-
-        # Extract relevant metrics for display
-        total_orders, total_cancelled_orders, total_return_orders, amazon_sharing_fees, shipping_fees, fba_fees, gross_profit, net_profit,  total_sales, mode_value, less_than_mode, greater_than_mode, df_greater_than_mode = metrics
-
-        # Display Metrics
-        display_metrics(metrics)
-
-        # Display Critical Orders
+        (total_orders, total_cancelled_orders, total_return_orders, amazon_sharing_fees, shipping_fees, fba_fees,
+         gross_profit, net_profit, total_sales, mode_value, less_than_mode, greater_than_mode, df_greater_than_mode,
+         loss_from_returned_orders) = metrics
+        
+        # Display Key Metrics
+        display_metrics((total_orders, total_cancelled_orders, total_return_orders, amazon_sharing_fees, shipping_fees,
+                         fba_fees, gross_profit, net_profit, total_sales))
+        
+        # Display Critical Orders and Related Metrics
         display_critical_orders(mode_value, less_than_mode, greater_than_mode, df_greater_than_mode)
 
         # Display Location Analysis
@@ -32,6 +33,10 @@ def main():
 
         # Display SKU Analysis
         display_sku_analysis(df)
+
+        # Display Loss from Returned Orders
+        st.header('Loss from Returned Orders')
+        st.metric('Total Loss from Returned Orders', f"₹{loss_from_returned_orders:,.2f}")
 
 if __name__ == '__main__':
     main()

@@ -1,8 +1,7 @@
 import streamlit as st
 
-def display_metrics(metrics):
-    # Extract only the first 10 metrics relevant to display_metrics
-    total_orders, total_cancelled_orders, total_return_orders, amazon_sharing_fees, shipping_fees, fba_fees, gross_profit, net_profit, total_sales, _, *_ = metrics
+def display_metrics(core_metrics):
+    total_orders, total_cancelled_orders, total_return_orders, amazon_sharing_fees, shipping_fees, fba_fees, gross_profit, net_profit, total_sales = core_metrics
 
     st.header('Key Metrics')
     col1, col2, col3, col4 = st.columns(4)
@@ -27,20 +26,18 @@ def display_metrics(metrics):
     with col9:
         st.metric('Total Sales', f"₹{total_sales:,.2f}")
 
-def display_critical_orders( mode_value, less_than_mode, greater_than_mode, df_greater_than_mode):
+def display_critical_orders(mode_value, less_than_mode, greater_than_mode, df_greater_than_mode):
     st.header('Critical Orders from Reconciliation')
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric('Normal Comission behaviour', mode_value)
+        st.metric('Normal Commission Behavior', mode_value)
     with col2:
-        st.metric('Critical Commission number count', greater_than_mode)
+        st.metric('Critical Commission Number Count', greater_than_mode)
     with col3:
-        st.metric('Favourable Commission number count', less_than_mode)
+        st.metric('Favorable Commission Number Count', less_than_mode)
 
     st.header('Orders with Estimated Selling Commission Greater than Mode')
     st.dataframe(df_greater_than_mode)
-
-    
 
 def display_location_analysis(df):
     st.header('Location Analytics')
