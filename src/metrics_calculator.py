@@ -43,3 +43,34 @@ def calculate_metrics(df):
     return (total_orders, total_cancelled_orders, total_return_orders, amazon_sharing_fees, shipping_fees, fba_fees,
             gross_profit, net_profit, total_sales, mode_value, less_than_mode, greater_than_mode, df_greater_than_mode,
             loss_from_returned_orders)
+
+
+def calculate_monthly_metrics(df):
+    df['date'] = pd.to_datetime(df['date/time']).dt.to_period('M')
+    monthly_metrics = df.groupby('date').apply(lambda x: pd.Series({
+        'total_orders': len(x[x['type'].str.contains('order', case=False, na=False)]) - len(x[x['type'].str.contains('refund|cancelled', case=False, na=False)]),
+        'total_cancelled_orders': len(x[x['type'].str.contains('refund|cancelled', case=False, na=False)]),
+        'amazon_sharing_fees': abs(x['selling fees'].sum()),
+        'shipping_fees': abs(x['other transaction fees'].sum()),
+        'fba_fees': abs(x['fba fees'].sum()),
+        'total_sales': abs(x[x['type'].str.contains('order', case=False, na=False)]['product sales'].sum()),
+        'gross_profit': abs(x[x['type'].str.contains('order', case=False, na=False)]['product sales'].sum()) - abs(x['selling fees'].sum()) - abs(x['other transaction fees'].sum()) - abs(x['fba fees'].sum()),
+        'net_profit': abs(x[x['type'].str.contains('order', case=False, na=False)]['product sales'].sum()) - abs(x['selling fees'].sum()) - abs(x['other transaction fees'].sum()) - abs(x['fba fees'].sum()) - x['total sales tax liable(gst before adjusting tcs)'].sum() - x['tcs-cgst'].sum() - x['tcs-sgst'].sum() - x['tcs-igst'].sum() - x['tds (section 194-o)'].sum(),
+        'total_profit': abs(x[x['type'].str.contains('order', case=False, na=False)]['product sales'].sum()) - abs(x['selling fees'].sum()) - abs(x['other transaction fees'].sum()) - abs(x['fba fees'].sum()) - x['total sales tax liable(gst before adjusting tcs)'].sum() - x['tcs-cgst'].sum() - x['tcs-sgst'].sum() - x['tcs-igst'].sum() - x['tds (section 194-o)'].sum()
+    })).reset_index()
+
+    return monthly_metrics
+
+def calculate_fulfillment_metrics(df):
+    fulfillment_metrics = df.groupby('fulfillment').apply(lambda x: pd.Series({
+        'total_orders': len(x[x['type'].str.contains('order', case=False, na=False)]) - len(x[x['type'].str.contains('refund|cancelled', case=False, na=False)]),
+        'total_cancelled_orders': len(x[x['type'].str.contains('refund|cancelled', case=False, na=False)]),
+        'amazon_sharing_fees': abs(x['selling fees'].sum()),
+        'shipping_fees': abs(x['other transaction fees'].sum()),
+        'fba_fees': abs(x['fba fees'].sum()),
+        'total_sales': abs(x[x['type'].str.contains('order', case=False, na=False)]['product sales'].sum()),
+        'gross_profit': abs(x[x['type'].str.contains('order', case=False, na=False)]['product sales'].sum()) - abs(x['selling fees'].sum()) - abs(x['other transaction fees'].sum()) - abs(x['fba fees'].sum()),
+        'net_profit': abs(x[x['type'].str.contains('order', case=False, na=False)]['product sales'].sum()) - abs(x['selling fees'].sum()) - abs(x['other transaction fees'].sum()) - abs(x['fba fees'].sum()) - x['total sales tax liable(gst before adjusting tcs)'].sum() - x['tcs-cgst'].sum() - x['tcs-sgst'].sum() - x['tcs-igst'].sum() - x['tds (section 194-o)'].sum(),
+        'total_profit': abs(x[x['type'].str.contains('order', case=False, na=False)]['product sales'].sum()) - abs(x['selling fees'].sum()) - abs(x['other transaction fees'].sum()) - abs(x['fba fees'].sum()) - x['total sales tax liable(gst before adjusting tcs)'].sum() - x['tcs-cgst'].sum() - x['tcs-sgst'].sum() - x['tcs-igst'].sum() - x['tds (section 194-o)'].sum()
+    })).reset_index()
+    return fulfillment_metrics

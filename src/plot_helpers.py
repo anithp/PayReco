@@ -50,3 +50,15 @@ def display_sku_analysis(df):
     sku_counts = df['sku'].value_counts().reset_index()
     sku_counts.columns = ['SKU', 'Order Count']
     st.bar_chart(sku_counts.set_index('SKU'))
+
+
+
+def display_monthly_metrics(monthly_metrics):
+    st.header('Monthly Metrics')
+    st.dataframe(monthly_metrics)
+
+
+
+def display_fulfillment_comparison(fulfillment_metrics):
+    st.header('Fulfillment Comparison')
+    st.dataframe(fulfillment_metrics)
